@@ -1,5 +1,4 @@
 import {
-  ChatPayloadByCustomer,
   ChatRoom,
   FormatChatPayloadForCustomer,
   LoginUserData,

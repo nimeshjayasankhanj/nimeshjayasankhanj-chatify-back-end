@@ -7,12 +7,6 @@ export default class RegisterController {
     this.register = this.register.bind(this);
   }
 
-  /**
-   * save user to database
-   * @param req
-   * @param res
-   * @return {object} is for success or error message
-   */
   public async register(req: Request, res: Response) {
     try {
       const isEmailAvailable = Boolean(

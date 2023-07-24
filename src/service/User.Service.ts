@@ -74,7 +74,7 @@ export default class UserService {
       const userId = user?._id;
       const randomNumber = generateRandomNumber();
       await this.twoFaCodeService.saveTWoFACode(randomNumber, userId);
-      await this.sendTwoFaCode(randomNumber);
+      await this.sendTwoFaCode(randomNumber, user?.phone_number);
       const encryptedId = encryptValue(userId.toString());
       return encryptedId;
     } catch (error) {
@@ -86,6 +86,7 @@ export default class UserService {
   public async generateLoginToken(id: string) {
     try {
       const userId = decryptValue(id);
+      await this.twoFaCodeService.updateTwoFAStatus(id);
       return await this.userRepository.generateLoginToken(userId);
     } catch (error) {
       throw error;
@@ -145,20 +146,21 @@ export default class UserService {
     }
   }
 
-  public async sendTwoFaCode(randomNumber: number) {
+  public async sendTwoFaCode(
+    randomNumber: number,
+    phone_number: string | undefined
+  ) {
     try {
-      // Define the CURL-like request parameters
-      const url = "https://graph.facebook.com/v17.0/108509958990034/messages";
+      const url = process.env.GRAPHQL_URL;
       const headers = {
-        Authorization:
-          "Bearer EAAD7liQLWZAUBAGY0riLaUZBiTMhxUX16kr4h7g7O7m4dRaZA9hMUUrisQUdTUUejoaQrAk4IZCBcKmmOV2bZAZCB1CPVRD3rxzOq2Eh7NoBKqRmDigUeF09RufnZBJVIL4JUM3Cu11wY9N6KvjPt0sdNdBxrxHIFyFz5Bi2M26zFOLhOjQSLqlbxswpTkFg4sEUMnQ14vLcAZDZD",
+        Authorization: `Bearer ${process.env.FACEBOOK_TOKEN}`,
         "Content-Type": "application/json",
       };
 
       const data = {
         messaging_product: "whatsapp",
         recipient_type: "individual",
-        to: "94769846039",
+        to: { phone_number },
         type: "text",
         text: {
           preview_url: false,

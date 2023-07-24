@@ -28,6 +28,14 @@ export default class TwoFACodeService {
     }
   }
 
+  public async updateTwoFAStatus(id: string) {
+    try {
+      await this.twoFARepository.updateTwoFAStatus(id);
+    } catch (error) {
+      throw error;
+    }
+  }
+
   formatTwoFaPayload(data: TwoFACode) {
     return {
       two_fa_code: data.two_fa_code,

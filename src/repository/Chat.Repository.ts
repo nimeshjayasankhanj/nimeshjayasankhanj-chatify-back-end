@@ -1,4 +1,4 @@
-import { InitializeChat, LoginUserData, MessagePayload } from "../dto/chat.dto";
+import { InitializeChat, MessagePayload } from "../dto/chat.dto";
 import { Chat } from "../models/chat";
 import ChatMessageRepository from "./ChatMessage.Repository";
 
@@ -6,6 +6,13 @@ export default class ChatRepository {
   private chatMessageRepository: ChatMessageRepository =
     new ChatMessageRepository();
   public async initializeChat(data: InitializeChat) {
+    const chatIsAvailable = await Chat.findOne({
+      receiver_id: data.receiver_id,
+      sender_id: data.sender_id,
+    });
+    if (chatIsAvailable) {
+      return chatIsAvailable;
+    }
     const chat = await Chat.create(data);
     return chat;
   }

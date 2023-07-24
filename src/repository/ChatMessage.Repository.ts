@@ -1,4 +1,4 @@
-import { ChatMessagePayload, MessagePayload } from "../dto/chat.dto";
+import { ChatMessagePayload } from "../dto/chat.dto";
 import { ChatMessage } from "../models/chat-mesage";
 
 export default class ChatMessageRepository {
